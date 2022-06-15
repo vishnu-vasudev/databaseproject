@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+</head>
+<body>
+
+    <form method="post">
+        {% csrf_token %}
+        <br><div class="container" style="width: 480px;">
+            <label for="student-name">Name</label><br>
+            <div class="input-group mb-3">
+                <input type="text" name="student-name" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+            <label for="student-place">Place</label><br>
+            <div class="input-group mb-3">
+                <input type="text" name="student-place" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+            </div><br>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <label class="input-group-text" for="inputGroupSelect01">Department</label>
+                </div>
+                <select class="custom-select" id="inputGroupSelect01" name="student-dpt">
+                    <option selected>Choose...</option>
+                    {% for temp in dpt_details %}
+                    <option value="{{temp.id}}">{{temp.dpt_name}}</option>
+                    {% endfor %}
+                </select>
+            </div><br>
+            <label for="dob">Date Of Birth</label><br>
+            <div class="input-group mb-3">
+                <input type="date" name="dob" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+            <center><button type="submit" class="btn btn-success">submit</button></center>
+          </div><br>
+        </form>
+
+          <table class="table">
+            <thead>
+              <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Student-name</th>
+                <th scope="col">Place</th>
+                <th scope="col">Department</th>
+                <th scope="col">Date of Birth</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for i in det %}
+              <tr>
+                <th scope="row">{{i.id}}</th>
+                <td>{{i.stud_name}}</td>
+                <td>{{i.stud_place}}</td>
+                <td>{{i.stud_dept.dpt_name}}</td>
+                <td>{{i.dob}}</td>
+                <td><a class="btn btn-danger" href="{% url 'st_delete' i.id %}">delete</a></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+
+            
+    
+
+
+    
+        
+
+  
+    
+      
+      
+      
+</body>
+</html>
