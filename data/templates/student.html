@@ -37,6 +37,14 @@
             <div class="input-group mb-3">
                 <input type="date" name="dob" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
             </div>
+            <label for="user-name">Username</label><br>
+            <div class="input-group mb-3">
+                <input type="text" name="user-name" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+            <label for="password">Password</label><br>
+            <div class="input-group mb-3">
+                <input type="text" name="pass-word" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
             <center><button type="submit" class="btn btn-success">submit</button></center>
           </div><br>
         </form>
@@ -49,6 +57,8 @@
                 <th scope="col">Place</th>
                 <th scope="col">Department</th>
                 <th scope="col">Date of Birth</th>
+                <th scope="col">Username</th>
+                <th scope="col">Password</th>
               </tr>
             </thead>
             <tbody>
@@ -57,8 +67,10 @@
                 <th scope="row">{{i.id}}</th>
                 <td>{{i.stud_name}}</td>
                 <td>{{i.stud_place}}</td>
-                <td>{{i.stud_dept.dpt_name}}</td>
+                <td>{{i.stud_dept.dpt_name|upper}}</td>
                 <td>{{i.dob}}</td>
+                <td>{{i.username}}</td>
+                <td>{{i.password}}</td>
                 <td><a class="btn btn-danger" href="{% url 'st_delete' i.id %}">delete</a></td>
               </tr>
               {% endfor %}

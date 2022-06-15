@@ -1,3 +1,5 @@
+from genericpath import exists
+ 
 import imp
 from django.shortcuts import render,redirect
 from .models import Registration, Department, Student
@@ -39,7 +41,9 @@ def studentfn(request):
         place = request.POST['student-place']
         dept_id = request.POST['student-dpt']
         dob = request.POST['dob']
-        obj2 = Student(stud_name = name, stud_place = place, stud_dept_id = dept_id, dob = dob)
+        username = request.POST['user-name']
+        password = request.POST['pass-word']
+        obj2 = Student(stud_name = name, stud_place = place, stud_dept_id = dept_id, dob = dob, username = username, password = password)
         obj2.save()
     
     dpt_details = Department.objects.all().distinct('dpt_name')
@@ -51,4 +55,23 @@ def st_delete(request, id):
     return redirect('student')
 
 def loginfn(request):
-    return render(request, 'login.html')
+    msg = ''
+    if request.method == 'POST':
+        username = request.POST['username1']
+        password = request.POST['password1']
+        try:
+            log = Student.objects.get(username = username, password = password)
+            return redirect('home')
+        except:
+            msg = 'Invalid data'
+
+        # log = Student.objects.filter(username = username, password = password).exists()
+        # print(log)
+        # if log:
+        #     return redirect('home')
+        # else:
+        #     msg = 'Invalid data'
+    return render(request, 'login.html', {'msg':msg})
+
+def homefn(request):
+    return render(request, 'home.html')

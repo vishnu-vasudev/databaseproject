@@ -8,5 +8,6 @@ urlpatterns = [
     path('update/<int:id>', views.update, name='update'),
     path('student', views.studentfn, name='student'),
     path('st_delete/<int:id>', views.st_delete, name='st_delete'),  
-    path('login', views.loginfn, name='login'),  
+    path('login', views.loginfn, name='login'),
+    path('home', views.homefn, name='home'),  
 ]

@@ -14,3 +14,5 @@ class Student(models.Model):
     stud_place = models.CharField(max_length=20)
     stud_dept = models.ForeignKey(Department, on_delete=models.CASCADE)
     dob = models.DateField()
+    username = models.CharField(max_length=20, default='')
+    password = models.CharField(max_length=20, default='')
