@@ -1,3 +1,4 @@
+from distutils.command.upload import upload
 from statistics import mode
 from django.db import models
 
@@ -16,3 +17,17 @@ class Student(models.Model):
     dob = models.DateField()
     username = models.CharField(max_length=20, default='')
     password = models.CharField(max_length=20, default='')
+
+class Image(models.Model):
+    image = models.ImageField(upload_to = 'photos/')
+    pd_name = models.CharField(max_length=20)
+
+class Ajaxdata(models.Model):
+    name = models.CharField(max_length=20)
+    email = models.CharField(max_length=20)
+    phone = models.BigIntegerField()
+
+class Staff_registration(models.Model):
+    st_name = models.CharField(max_length=20)
+    st_contact = models.BigIntegerField()
+    st_email = models.CharField(max_length=50)

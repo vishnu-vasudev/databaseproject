@@ -11,11 +11,27 @@
 
 </head>
 <body>
-    <form method="post">
+    <!-- <form method="post">
       {% csrf_token %}
         <br><input type="text" name="username">
         <input type="password" name="password">
         <button type="submit">submit</button>
+    </form> -->
+    <form method="post">
+      <!-- {{registrationform}} -->
+      <table>
+        <tr>
+          <td>{{registrationform.name.label}}</td>
+          <td>{{registrationform.name}}</td>
+        </tr>
+        <tr>
+          <td>{{registrationform.password.label}}</td>
+          <td>{{registrationform.password}}</td>
+        </tr>
+        <tr>
+          <td><button type="submit">submit</button></td>
+        </tr>
+      </table>
     </form>
     
     <br><br><div>
@@ -28,13 +44,11 @@
               </tr>
             </thead>
             <tbody>
-                {% for data in details %}
+                {% for data in ob %}
               <tr>
                 <th scope="row">{{data.id}}</th>
                 <td>{{data.name}}</td>
                 <td>{{data.password}}</td>
-                <td><a class="btn btn-danger" href="{% url 'delete' data.id %}">delete</a></td>
-                <td><a class="btn btn-danger" href="{% url 'update' data.id %}">update</a></td>
               </tr>
               {% endfor %}
             </tbody>

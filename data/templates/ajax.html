@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+    
+    
+        <input type="text" id="input-name" placeholder="name"><br><br>
+        <input type="text" id="input-email" placeholder="email" onkeyup="checkmail()"><br>
+        <label for="" id="msg-label"></label><br>
+        <input type="text" id="input-phone" placeholder="phone"><br><br>
+        <button onclick="insert()" type="button">submit</button>
+   
+
+    <script>
+        function insert(){
+            $.ajax({
+                url : "insert",
+                type : "POST",
+                data : {
+                    name : $("#input-name").val(),
+                    email : $("#input-email").val(),
+                    phone : $("#input-phone").val()
+                },
+                success : function(response){
+                    alert(response.message)
+                    $("#input-name").val(''),
+                    $("#input-email").val(''),
+                    $("#input-phone").val('')
+                }
+            })
+        }
+        function checkmail(){
+            $.ajax({
+                url : "mailcheck",
+                type : "POST",
+                data : {
+                    email : $("#input-email").val()
+                },
+                success : function(response){
+                    // console.log(response.email)
+                    document.getElementById('msg-label').innerHTML = response.email
+                }
+            })
+        }
+    </script>
+
+</body>
+</html>

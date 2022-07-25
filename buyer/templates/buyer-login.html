@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+<body>
+
+        <div class="container" style="width: 480px;">
+            <label for="by-email">Email</label><br>
+            <div class="input-group mb-3">
+                <input type="text" id="byr-email" name="by-email" onkeyup="verify()" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+            <label for="" id="error-label"></label><br>
+            <label for="by-password">Password</label><br>
+            <div class="input-group mb-3">
+                <input id="byr-password" type="password" name="by-password" class="form-control" aria-label="Username" aria-describedby="basic-addon1">
+            </div>
+            <center><button onclick="byr_login()" type="submit" class="btn btn-danger">Login</button></center>
+        </div>
+    
+
+    <script>
+
+        function byr_login(){
+            $.ajax({
+                url : "buyerbyr-login",
+                type : "POST",
+                data : {
+                    email : $('#byr-email').val(),
+                    password : $('#byr-password').val()
+                },
+                success: function(response){
+                    if (response.msg == 1) {
+                        window.location = 'buyerbyr-home'
+                    }
+                }
+            })
+        }
+
+        function verify(){
+            $.ajax({
+                url : 'buyerbuyer_verify',
+                type : "POST",
+                data : {
+                    email : $('#byr-email').val()
+                },
+                success : function(response){
+                    console.log('hehe')
+                    document.getElementById('error-label').innerHTML = response.msg
+                }
+            })
+        }
+    </script>
+
+</body>
+</html>

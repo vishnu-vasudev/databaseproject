@@ -1,19 +1,33 @@
-from genericpath import exists
- 
+
+from re import X
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 import imp
 from django.shortcuts import render,redirect
-from .models import Registration, Department, Student
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Registration, Department, Student, Image, Ajaxdata, Staff_registration
+from .forms import Registrationform
+from .decorators import login_required
 
 # Create your views here.
+@csrf_exempt
 def user(request):
+    registrationform = Registrationform(request.POST)
     if request.method=='POST':
-        name = request.POST['username']
-        password = request.POST['password']
-        user = Registration(name = name, password = password)
-        user.save()
-        return redirect('user')
-    details = Registration.objects.all()
-    return render(request, 'base.html', {'details':details})
+    #     name = request.POST['username']
+    #     password = request.POST['password']
+    #     user = Registration(name = name, password = password)
+    #     user.save()
+    #     return redirect('user')
+        registrationform = Registrationform(request.POST)
+
+        if registrationform.is_valid():
+            registrationform.save()
+        else:
+            print(registrationform.errors)
+    ob = Registration.objects.all()
+    return render(request, 'base.html', {'registrationform':registrationform, 'ob':ob})
 
 def dptfn(request):
     if request.method == 'POST':
@@ -61,6 +75,7 @@ def loginfn(request):
         password = request.POST['password1']
         try:
             log = Student.objects.get(username = username, password = password)
+            request.session['stud_id'] =log.id     
             return redirect('home')
         except:
             msg = 'Invalid data'
@@ -73,5 +88,107 @@ def loginfn(request):
         #     msg = 'Invalid data'
     return render(request, 'login.html', {'msg':msg})
 
+@login_required
 def homefn(request):
-    return render(request, 'home.html')
+    data=Student.objects.get(id=request.session['stud_id'])
+    return render(request, 'home.html', {'data':data})
+
+def password(request):
+    msg=''
+    if request.method == 'POST':
+        oldpwd = request.POST['cr-password']
+        newpwd = request.POST['n-password']
+        conpwd = request.POST['cn-password']
+        ob = Student.objects.get(id = request.session['stud_id'])
+        
+        if ob.password == oldpwd:
+            if newpwd == conpwd:
+                ob.password = newpwd
+                ob.save()
+                msg = "Password changed"
+            else:
+                msg = "Password does not match"
+        else:
+            msg = "Password invalid"
+    return render(request, 'upd-password.html', {'msg':msg})
+
+def imgdisplay(request):
+    if request.method == 'POST':
+        pd_name = request.POST['pd-name']
+        img = request.FILES['img']
+        new = Image(pd_name = pd_name, image = img)
+        new.save()
+    obs = Image.objects.all()
+
+    return render(request, 'img-display.html', {'obs':obs})
+    
+@csrf_exempt
+def ajax(request):
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        phone = request.POST['phone']
+        ajaxobj = Ajaxdata(name = name, email = email, phone = phone)
+        ajaxobj.save()
+        return JsonResponse({"message":"data inserted"})
+    return render(request, 'ajax.html')
+
+@csrf_exempt
+def mailcheck(request):
+    mail = request.POST['email']
+    check = Ajaxdata.objects.filter(email = mail).exists()
+    if check:
+        return JsonResponse({"email":"Email already exists"})
+    else:
+        return JsonResponse({"email":"Email available"})
+
+def ajax_display(request):
+    return render(request, 'ajax-display.html')
+
+def tempurl(request):
+    data = Ajaxdata.objects.all()
+    json_data = [{"id":i.id, "name":i.name, "email":i.email, "phone":i.phone}for i in data]
+    return JsonResponse({"msg":json_data})
+
+@csrf_exempt
+def tempurl2(request):
+    id = request.POST['id']
+    Ajaxdata.objects.get(id = id).delete()
+    return JsonResponse({"msg2":"Deleted"})
+
+@csrf_exempt
+def tempurl3(request):
+    id = request.POST['id']
+    data5 = Ajaxdata.objects.get(id = id)
+    json_udata = [{"id":data5.id, "name":data5.name, "email":data5.email, "phone":data5.phone}]
+    return JsonResponse({"msg5":json_udata})
+
+@csrf_exempt
+def tableupdate(request):
+    if request.method == 'POST':
+        id = request.POST['id']
+        name = request.POST['name']
+        email = request.POST['email']
+        phone = request.POST['phone']
+        Ajaxdata.objects.filter(id = id).update(name = name, email = email, phone = phone)
+        return JsonResponse({"message":"Update Successful"})
+    return render(request, 'ajax-display.html')
+
+@api_view(['POST'])
+# @csrf_exempt
+def staff(request):
+    # data = r.json()
+    staff_data = request.data
+    st_obj = Staff_registration(st_name = staff_data['name'], st_contact = staff_data['contact'], st_email = staff_data['email'])
+    st_obj.save()
+    return Response('Staff registered!')
+
+@api_view(['POST'])
+def staff_display(request):
+    staff_display_data = Staff_registration.objects.all()
+    return Response({"staff_display_data":staff_display_data})
+    
+@api_view(['GET'])
+def index(request):
+    message = 'hi'
+    return Response(message)
